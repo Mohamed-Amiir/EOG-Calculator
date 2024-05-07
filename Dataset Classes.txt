@@ -1,0 +1,10 @@
+Dataset Classes:
+________________
+
+Yukari-->Up
+Asagi-->Down
+Sag-->Right 
+Sol-->Left
+Kirp-->Blink 
+
+ornek-->Example
