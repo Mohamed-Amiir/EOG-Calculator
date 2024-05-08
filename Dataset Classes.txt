@@ -7,4 +7,15 @@ Sag-->Right
 Sol-->Left
 Kirp-->Blink 
 
-ornek-->Example
+ornek-->
+
+
+**************************************************************
+set the cursor shift space at the second move to 4*cursor size
+**************************************************************
+
+if x >= 115 or x >= 465 
+   up and down by 50
+if y >= 175 or y >= 375
+   Right and left by 50
+       
