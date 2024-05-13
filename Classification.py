@@ -12,15 +12,19 @@ def Train_SVM_Classifier(Train_Signals, Labels):
     # def Train_SVM_Classifier(Train_Signals, Labels, Test_Signals, TestLabels):
     # Create the SVM classifier
     SVM_Model = SVC(kernel='linear', C=15, random_state=42)
+    
     # Train the classifier on the training set
     SVM_Model.fit(Train_Signals, Labels)
-    # SaveModel(SVM_Model,'SVM')
+    SaveModel(SVM_Model,'SVM')
     scores = cross_val_score(SVM_Model, Train_Signals, Labels, cv=5)
     trainAcc = np.mean(scores)
     accuracy = SVM_Model.score(Train_Signals, Labels)
+
     # y_pred = SVM_Model.predict(Test_Signals)
     # Evaluate the accuracy of the model
+
     # accuracy = accuracy_score(TestLabels, y_pred)
+
     print("SVM Train Acc = %.2f%%" % round(accuracy * 100, 2))
     # print("SVM Test Accuracy: {:.2f}%".format(accuracy * 100))
     return accuracy

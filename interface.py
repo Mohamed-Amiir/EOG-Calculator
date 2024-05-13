@@ -1,6 +1,12 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import time
+import main, Classification as CL
+import backend 
+# load the ML model
+Model = CL.LoadModel('SVM')
+# load test signals
+TestSignels = main.Get_Prepared_Signals(1)
 
 class Button:
     position = (0, 0)
@@ -67,6 +73,10 @@ class App:
             self.buttons[i].button_function.place(x=self.buttons[i].position[0], y=self.buttons[i].position[1], width=self.buttons[i].size[0], height=self.buttons[i].size[1])
             self.buttons[i].button_function["command"] = lambda i=i: self.display_input(str(i))
 
+        
+
+
+        # self.multiply.button_function["command"] = lambda: self.display_input("*")
         # Create entry widget for input
         # self.entry = tk.Entry(root)
         # self.entry["borderwidth"] = "1px"
@@ -167,17 +177,43 @@ class App:
         self.redraw_cursor(self.cursor.current_button)
         self.first_move = False
         self.second_move = False
+        self.direction = -1
         # Bind arrow keys and space key
         root.bind("<Up>", self.move_cursor)
         root.bind("<Down>", self.move_cursor)
         root.bind("<Left>", self.move_cursor)
         root.bind("<Right>", self.move_cursor)
-        root.bind("<space>", self.toggle_selection)
-
+        root.bind("<space>", self.move_cursor)
 
     def move_cursor(self, event):
         key = event.keysym
+        ##################################################################################
         if key == "Up":
+            self.direction = 4
+        elif key == "Down":
+            self.direction = 1
+        elif key == "Left":
+            self.direction = 2
+        elif key == "Right":
+            self.direction = 3
+        elif key == "space":
+            self.direction = 0
+
+        prediction = backend.GetMovement(Model, TestSignels, self.direction) 
+        move = ""
+        if prediction == 0:
+            move = "Blink"
+        elif prediction == 1:
+            move = "Down"
+        elif prediction == 2:
+            move = "Left"
+        elif prediction == 3:
+            move = "Right"
+        elif prediction == 4:
+            move = "Up"        
+
+        ##################################################################################
+        if move == "Up":
             if (self.cursor.current_button == self.main):
                 self.cursor.current_button = self.two
             elif self.cursor.current_button == self.zero:
@@ -198,9 +234,8 @@ class App:
                 self.cursor.current_button = self.zero
             elif self.cursor.current_button == self.two or self.cursor.current_button == self.three or self.cursor.current_button == self.one:
                 self.cursor.current_button = self.add
-            
-
-        elif key == "Down":
+        
+        elif move == "Down":
             if (self.cursor.current_button == self.main):
                 self.cursor.current_button = self.zero
             elif self.cursor.current_button == self.two:
@@ -221,8 +256,8 @@ class App:
                 self.cursor.current_button = self.divide
             elif self.cursor.current_button == self.add:
                 self.cursor.current_button = self.two
-
-        elif key == "Left":
+        
+        elif move == "Left":
             if (self.cursor.current_button == self.main):
                 self.cursor.current_button = self.five
             elif self.cursor.current_button == self.two:
@@ -243,8 +278,8 @@ class App:
                 self.cursor.current_button = self.eight
             elif self.cursor.current_button == self.five or self.cursor.current_button == self.six or self.cursor.current_button == self.four:
                 self.cursor.current_button = self.subtract
-
-        elif key == "Right":
+    
+        elif move == "Right":
             if (self.cursor.current_button == self.main):
                 self.cursor.current_button = self.eight
             elif self.cursor.current_button == self.two:
@@ -264,13 +299,15 @@ class App:
             elif self.cursor.current_button == self.subtract:
                 self.cursor.current_button = self.five
             elif self.cursor.current_button == self.eight or self.cursor.current_button == self.seven or self.cursor.current_button == self.nine:
-                self.cursor.current_button = self.multiply
-
+                self.cursor.current_button = self.multiply     
+        
+        elif move == "Blink":
+            self.toggle_selection()
 
         print(f"Cursor Position: X={self.cursor.current_button.position[0]}, Y={self.cursor.current_button.position[1]}")
         self.redraw_cursor(self.cursor.current_button)
 
-    def toggle_selection(self, event):
+    def toggle_selection(self):
         real_buttons = self.buttons + [self.main, self.subtract, self.add, self.multiply, self.divide, self.clear, self.exit]
         for button in real_buttons:
             if self.cursor.current_button == button:
@@ -290,6 +327,18 @@ class App:
         
         # Schedule changing back to original color after 2 seconds
         self.root.after(100, lambda: self.redraw_cursor(button))
+
+        #################################################TO BE REMOVED########################################################
+        if len(self.GLineEdit_383.get()) == 3:
+            equation = self.GLineEdit_383.get()
+            try:
+                result = eval(equation)
+                self.GLineEdit_383.delete(0, tk.END)
+                self.GLineEdit_383.insert(0, f"{equation} = {result}")
+            except:
+                self.GLineEdit_383.delete(0, tk.END)
+                self.GLineEdit_383.insert(0, "Invalid equation")    
+        ####################################################################################################################
 
     def redraw_cursor(self, the_button):
         # Remove previous cursor
@@ -320,7 +369,7 @@ class App:
         self.first_move = False
         self.second_move = False
         self.GLineEdit_383.delete(0, tk.END)
-        
+
     def exit_window(self):
         self.root.destroy()    
 
@@ -333,8 +382,9 @@ class App:
         except:
             self.GLineEdit_383.delete(0, tk.END)
             self.GLineEdit_383.insert(tk.END, "Invalid equation")
-   
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
     root.mainloop()
+
