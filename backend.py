@@ -7,9 +7,13 @@ import main, Classification as CL
 
 # get movements
 def GetMovement(Model, TestSignals: list[np.ndarray], Direction: int):
+
+    # [blink,blink,blink,blink,down,down,down,down,left,left,left,left,right,right,right,right,up,up,up,up ]
+    
     shift = (len(TestSignals) / 5) * Direction
     rand_picked_num = random.randint(0, 3)
     sample_index = rand_picked_num + shift
+
     TestSignal = TestSignals[int(sample_index)]
     prediction = Model.predict([TestSignal])
     print("prediction for " + GetClass(int(Direction)), " is  ", GetClass(int(prediction)))

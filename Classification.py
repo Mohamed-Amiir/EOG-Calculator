@@ -78,6 +78,7 @@ def GetLabels(Singnals):
         Labels.append(int(X))
     return Labels
 
+#["Blink","Down","Left","Right","Up]
 
 def SaveModel(Model, Name: str):
     Name = Name.upper()

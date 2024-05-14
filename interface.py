@@ -205,6 +205,7 @@ class App:
             self.direction = 0
 
         prediction = backend.GetMovement(Model, TestSignels, self.direction) 
+        
         move = ""
         if prediction == 0:
             move = "Blink"

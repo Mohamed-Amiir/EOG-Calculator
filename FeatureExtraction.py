@@ -27,39 +27,46 @@ def wavelet_features(preprocessed_signals, wavelet, level):
     return features
 
 
-def raw_sample_features(preprocessed_signals):
-    # Baseline Drift: Calculate the mean of the signal
-    baseline_drift = np.mean(preprocessed_signals)
+
+def raw_sample_features(eog_signals):
+    extracted_features_array = []
+    for eog_signal in eog_signals:
+        # Baseline Drift: Calculate the mean of the signal
+        baseline_drift = np.mean(eog_signal)
+        
+        # Amplitude of Eye Movements: Calculate the peak-to-peak amplitude
+        amplitude = np.max(eog_signal) - np.min(eog_signal)
+        
+        # Duration of Eye Movements: Calculate the time duration of the signal
+        duration = len(eog_signal)
+        
+        # Directional Information: Determine the direction of eye movements based on signal polarity
+        direction = 1 if np.mean(eog_signal) > 0 else 0
+        
+        # Frequency Characteristics: Calculate the FFT of the signal to analyze frequency components
+        fft_result = np.fft.fft(eog_signal)
+        frequency_components = np.abs(fft_result)
+        dominant_frequency = np.argmax(frequency_components)
+        
+        # Artifact Rejection: Check for signal quality based on standard deviation
+        std_deviation = np.std(eog_signal)
+        artifact_rejection = 1 if std_deviation < 0.1 else 0
+        
+        # Store the extracted features in a dictionary
+        features = [
+            baseline_drift,
+            amplitude,
+            duration,
+            direction,
+            dominant_frequency,
+            artifact_rejection
+        ]
+        
+        extracted_features_array.append(features)
     
-    # Amplitude of Eye Movements: Calculate the peak-to-peak amplitude
-    amplitude = np.max(preprocessed_signals) - np.min(preprocessed_signals)
-    
-    # Duration of Eye Movements: Calculate the time duration of the signal
-    duration = len(preprocessed_signals)
-    
-    # Directional Information: Determine the direction of eye movements based on signal polarity
-    direction = "Rightward" if np.mean(preprocessed_signals) > 0 else "Leftward"
-    
-    # Frequency Characteristics: Calculate the FFT of the signal to analyze frequency components
-    fft_result = np.fft.fft(preprocessed_signals)
-    frequency_components = np.abs(fft_result)
-    dominant_frequency = np.argmax(frequency_components)
-    
-    # Artifact Rejection: Check for signal quality based on standard deviation
-    std_deviation = np.std(preprocessed_signals)
-    artifact_rejection = "Good" if std_deviation < 0.1 else "Poor"
-    
-    # Create a dictionary to store the extracted features
-    features = {
-        "Baseline Drift": baseline_drift,
-        "Amplitude": amplitude,
-        "Duration": duration,
-        "Direction": direction,
-        "Dominant Frequency": dominant_frequency,
-        "Artifact Rejection": artifact_rejection
-    }
-    
-    return features
+    return extracted_features_array
+
+
 
 
 

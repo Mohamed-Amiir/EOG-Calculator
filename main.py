@@ -20,12 +20,7 @@ def Get_Prepared_Signals(Signal_Type):
 
     # -------------------------------> Preprocessing <---------------------------------------
     ConcSignals = Pre.GetConcatenateSignals(Signals)
-    # # Plotting the first element of ConcSignals
-    # plt.plot(ConcSignals[0])
-    # plt.title("Before Filtering and Resampling")
-    # plt.xlabel("Time")
-    # plt.ylabel("Amplitude")
-    # plt.show()
+    
 
     # Filtering Signals
     Filtered_Signals = Pre.Butter_Bandpass_Filter \
@@ -33,18 +28,14 @@ def Get_Prepared_Signals(Signal_Type):
 
     # Resampling Signals
     Resampled_Signals = Pre.Resampling(Filtered_Signals, 50)
-    # plt.plot(Resampled_Signals[0])
-    # plt.title("After Filtering and Resampling")
-    # plt.xlabel("Time")
-    # plt.ylabel("Amplitude")
-    # plt.show()    
     # -------------------------------> Feature Extraction <---------------------------------------
     # Wavelets
     DWT_Train_Signals = FeatureExtraction.wavelet_features(Resampled_Signals, wavelet='db1', level=2)
-
+    raw_signals = FeatureExtraction.raw_sample_features(Resampled_Signals)
     # Time Domain Features
 
     Features = DWT_Train_Signals
+
     return Features
 
 def getMovements(Signals):
@@ -65,8 +56,9 @@ def Train_SVM_Classifier(Train_Signals, Labels):
     # Train the classifier on the training set
     SVM_Model.fit(Train_Signals, Labels)
     Classification.SaveModel(SVM_Model,'SVM')
-    scores = cross_val_score(SVM_Model, Train_Signals, Labels, cv=5)
-    trainAcc = np.mean(scores)
+    # scores = cross_val_score(SVM_Model, Train_Signals, Labels, cv=5)
+    # trainAcc = np.mean(scores)
+    
     accuracy = SVM_Model.score(Train_Signals, Labels)
 
     Test_Signals = Get_Prepared_Signals(1)
@@ -86,6 +78,8 @@ def Train_SVM_Classifier(Train_Signals, Labels):
     return accuracy
 
 Features = Get_Prepared_Signals(-1)
+print(Features)
+
 Signal_Labels = Classification.GetLabels(Features)
 
 SVMTrain = Train_SVM_Classifier(Features, Signal_Labels)
