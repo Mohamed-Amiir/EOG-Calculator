@@ -21,9 +21,9 @@ def GetClass(ClassId: int) -> str:
     return Classes[ClassId]
 
 
-Model = CL.LoadModel('SVM')
-# load test signals
-TestSignels = main.Get_Prepared_Signals(1)
+# Model = CL.LoadModel('SVM')
+# # load test signals
+# TestSignels = main.Get_Prepared_Signals(1)
 
-move = GetMovement(Model, TestSignels, 4)
-print(move)
+# move = GetMovement(Model, TestSignels, 4)
+# print(move)

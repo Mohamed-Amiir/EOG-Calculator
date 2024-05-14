@@ -8,28 +8,6 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 
 
-def Train_SVM_Classifier(Train_Signals, Labels):
-    # def Train_SVM_Classifier(Train_Signals, Labels, Test_Signals, TestLabels):
-    # Create the SVM classifier
-    SVM_Model = SVC(kernel='linear', C=15, random_state=42)
-    
-    # Train the classifier on the training set
-    SVM_Model.fit(Train_Signals, Labels)
-    SaveModel(SVM_Model,'SVM')
-    scores = cross_val_score(SVM_Model, Train_Signals, Labels, cv=5)
-    trainAcc = np.mean(scores)
-    accuracy = SVM_Model.score(Train_Signals, Labels)
-
-    # y_pred = SVM_Model.predict(Test_Signals)
-    # Evaluate the accuracy of the model
-
-    # accuracy = accuracy_score(TestLabels, y_pred)
-
-    print("SVM Train Acc = %.2f%%" % round(accuracy * 100, 2))
-    # print("SVM Test Accuracy: {:.2f}%".format(accuracy * 100))
-    return accuracy
-
-
 def Train_RF_Classifier(Train_Signals, Labels):
     # def Train_RF_Classifier(Train_Signals, Labels, Test_Signals, TestLabels):
     RF_Model = RandomForestClassifier(n_estimators=150, max_depth=10, random_state=42)
@@ -75,6 +53,22 @@ def Train_DT_Classifier(Train_Signals, Labels):
     # print("DT Test Accuracy: {:.2f}%".format(testaccuracy * 100))
     return np.mean(accuracy)
 
+def Train_SVM_Classifier(Train_Signals, Labels):
+    # def Train_SVM_Classifier(Train_Signals, Labels, Test_Signals, TestLabels):
+    # Create the SVM classifier
+    SVM_Model = SVC(kernel='linear', C=15, random_state=42)
+    
+    # Train the classifier on the training set
+    SVM_Model.fit(Train_Signals, Labels)
+    SaveModel(SVM_Model,'SVM')
+    scores = cross_val_score(SVM_Model, Train_Signals, Labels, cv=5)
+    trainAcc = np.mean(scores)
+    accuracy = SVM_Model.score(Train_Signals, Labels)
+
+    print("SVM Train Acc = %.2f%%" % round(accuracy * 100, 2))
+    # print("SVM Test Accuracy: {:.2f}%".format(accuracy * 100))
+    return accuracy
+
 
 def GetLabels(Singnals):
     Labels = []
@@ -96,3 +90,8 @@ def LoadModel(Name):
     # Load the model
     Model = load(Name + 'model.joblib')
     return Model
+
+# Features = main.Get_Prepared_Signals(-1)
+# Signal_Labels = GetLabels(Features)
+
+# SVMTrain = Train_SVM_Classifier(Features, Signal_Labels)
