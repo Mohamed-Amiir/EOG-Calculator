@@ -11,12 +11,11 @@ TestSignels = main.Get_Prepared_Signals(1)
 class Button:
     position = (0, 0)
     size = (0, 0)
-    directions = []
+    default_color = "#78d8f1"
     button_function = None
     def __init__(self, position, size):
         self.position = position
         self.size = size
-        self.directions = []
         self.button_function = tk.Button(root)
 
 class Cursor:
@@ -63,7 +62,7 @@ class App:
 
         for i in range(len(self.buttons)):
             self.buttons[i].button_function["activebackground"] = "#a02010"
-            self.buttons[i].button_function["bg"] = "#78d8f1"
+            self.buttons[i].button_function["bg"] = self.buttons[i].default_color
             self.buttons[i].button_function["borderwidth"] = "0px"
             ft = tkFont.Font(family='Helvetica', size=13)
             self.buttons[i].button_function["font"] = ft
@@ -98,6 +97,7 @@ class App:
         self.GLineEdit_383.place(x=40,y=60,width=600,height=52)
 
         self.exit.button_function["activebackground"] = "#a02010"
+        self.exit.default_color = "#eca03d"
         self.exit.button_function["bg"] = "#eca03d"
         self.exit.button_function["borderwidth"] = "5px"
         ft = tkFont.Font(family='Helvetica',size=13)
@@ -109,6 +109,7 @@ class App:
         self.exit.button_function["command"] = lambda: self.exit_window()
 
         self.clear.button_function["activebackground"] = "black"
+        self.clear.default_color = "#eca03d"
         self.clear.button_function["bg"] = "#eca03d"
         self.clear.button_function["borderwidth"] = "5px"
         ft = tkFont.Font(family='Helvetica',size=13)
@@ -119,6 +120,7 @@ class App:
         self.clear.button_function.place(x=self.clear.position[0],y=self.clear.position[1],width=self.clear.size[0],height=self.clear.size[1])
         self.clear.button_function["command"] = lambda: self.clear_eq()
 
+        self.divide.default_color = "#a02010"
         self.divide.button_function["bg"] = "#a02010"
         self.divide.button_function["borderwidth"] = "5px"
         ft = tkFont.Font(family='Helvetica',size=18)
@@ -129,6 +131,7 @@ class App:
         self.divide.button_function.place(x=self.divide.position[0],y=self.divide.position[1],width=self.divide.size[0],height=self.divide.size[1])
         self.divide.button_function["command"] = lambda: self.display_input("/")
 
+        self.add.default_color = "#a02010"
         self.add.button_function["activebackground"] = "#ffffff"
         self.add.button_function["bg"] = "#a02010"
         self.add.button_function["borderwidth"] = "5px"
@@ -140,6 +143,7 @@ class App:
         self.add.button_function.place(x=self.add.position[0],y=self.add.position[1],width=self.add.size[0],height=self.add.size[1])
         self.add.button_function["command"] = lambda: self.display_input("+")
 
+        self.subtract.default_color = "#a02010"
         self.subtract.button_function["bg"] = "#a02010"
         self.subtract.button_function["borderwidth"] = "5px"
         ft = tkFont.Font(family='Helvetica',size=18)
@@ -150,6 +154,7 @@ class App:
         self.subtract.button_function.place(x=self.subtract.position[0],y=self.subtract.position[1],width=self.subtract.size[0],height=self.subtract.size[1])
         self.subtract.button_function["command"] = lambda: self.display_input("-")
 
+        self.multiply.default_color = "#a02010"
         self.multiply.button_function["bg"] = "#a02010"
         self.multiply.button_function["borderwidth"] = "5px"
         ft = tkFont.Font(family='Helvetica',size=18)
@@ -355,7 +360,7 @@ class App:
     def remove_cursor(self):
         real_buttons = self.buttons + [self.main, self.subtract, self.add, self.multiply, self.divide, self.clear, self.exit]
         for button in real_buttons:
-            button.button_function["bg"] = "#78d8f1"
+            button.button_function["bg"] = button.default_color
 
     def display_input(self, text):
         if self.GLineEdit_383.get() == "Invalid equation":
