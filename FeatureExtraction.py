@@ -69,19 +69,3 @@ def raw_sample_features(eog_signals):
 
 
 
-
-def stat_features(preprocessed_signals):
-    features = []
-    for signal in preprocessed_signals:
-        mean = np.mean(signal)
-        maximum = np.max(signal)
-        minimum = np.min(signal)
-        std_dev = np.std(signal)
-        signal_features = [mean, maximum, minimum, std_dev]
-        features.append(signal_features)
-    print("Time Domain Features Extraction Is Done \n")
-    return features
-
-
-
-

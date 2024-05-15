@@ -4,6 +4,7 @@ import Classification
 import FeatureExtraction
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
 
 
 from sklearn.svm import SVC
@@ -48,6 +49,30 @@ def getMovements(Signals):
         signal.append(Movesig)
     return signal
 
+
+def Train_RF_Classifier(Train_Signals, Labels):
+    # def Train_RF_Classifier(Train_Signals, Labels, Test_Signals, TestLabels):
+    RF_Model = RandomForestClassifier(n_estimators=150, max_depth=10, random_state=42)
+    RF_Model.fit(Train_Signals, Labels)
+    scores = cross_val_score(RF_Model, Train_Signals, Labels, cv=5)
+    Classification.SaveModel(RF_Model,'RF')
+    trainAcc = np.mean(scores)
+    accuracy = RF_Model.score(Train_Signals, Labels)
+
+    Test_Signals = Get_Prepared_Signals(1)
+    TestLabels = Classification.GetLabels(Test_Signals)
+    y_pred = RF_Model.predict(Test_Signals)
+    # Evaluate the accuracy of the model
+    # accuracy = accuracy_score(TestLabels, y_pred)
+    TestAccuracy = accuracy_score(TestLabels, y_pred)
+    print("\n")
+    print("RF Train Accuracy = %.2f%%" % round(accuracy * 100, 2))
+    print("\n")
+    print("RF Test Accurcy = %.2f%%" % round(TestAccuracy * 100, 2))
+    print("\n")
+
+    return accuracy
+
 def Train_SVM_Classifier(Train_Signals, Labels):
     # def Train_SVM_Classifier(Train_Signals, Labels, Test_Signals, TestLabels):
     # Create the SVM classifier
@@ -78,12 +103,12 @@ def Train_SVM_Classifier(Train_Signals, Labels):
     return accuracy
 
 Features = Get_Prepared_Signals(-1)
-print(Features)
+# print(Features)
 
 Signal_Labels = Classification.GetLabels(Features)
 
-SVMTrain = Train_SVM_Classifier(Features, Signal_Labels)
-
+RFTrain = Train_RF_Classifier(Features, Signal_Labels)
+# SVMtrain = Train_SVM_Classifier(Features, Signal_Labels)
 
 # RFTrain = Classification.Train_RF_Classifier(Features, Signal_Labels)
 # DTTrain = Classification.Train_DT_Classifier(Features, Signal_Labels)

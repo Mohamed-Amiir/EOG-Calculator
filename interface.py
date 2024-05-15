@@ -4,7 +4,7 @@ import time
 import main, Classification as CL
 import backend 
 # load the ML model
-Model = CL.LoadModel('SVM')
+Model = CL.LoadModel('RF')
 # load test signals
 TestSignels = main.Get_Prepared_Signals(1)
 
